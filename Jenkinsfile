@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        REMOTE_USER = 'your-remote-username'
-        REMOTE_HOST = 'your.server.ip.or.hostname'
-        REMOTE_DIR  = '/path/to/deploy/dir'
-        REPO_URL    = 'git@github.com:your-org/your-repo.git'
-    }
-
     stages {
         stage('Build') {
             steps {
@@ -23,19 +16,27 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent(['your-ssh-credentials-id']) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} '
-                        mkdir -p ${REMOTE_DIR} &&
-                        cd ${REMOTE_DIR} &&
-                        if [ ! -d ".git" ]; then
-                            git clone ${REPO_URL} .;
-                        else
-                            git pull origin master;
-                        fi &&
-                        docker-compose up --build -d
-                    '
-                    """
+                // Inject secrets here
+                withCredentials([
+                    string(credentialsId: 'remote-user', variable: 'REMOTE_USER'),
+                    string(credentialsId: 'remote-host', variable: 'REMOTE_HOST'),
+                    string(credentialsId: 'remote-dir', variable: 'REMOTE_DIR'),
+                    string(credentialsId: 'repo-url', variable: 'REPO_URL')
+                ]) {
+                    sshagent(['your-ssh-credentials-id']) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} '
+                            mkdir -p ${REMOTE_DIR} &&
+                            cd ${REMOTE_DIR} &&
+                            if [ ! -d ".git" ]; then
+                                git clone ${REPO_URL} .;
+                            else
+                                git pull origin master;
+                            fi &&
+                            docker-compose up --build -d
+                        '
+                        """
+                    }
                 }
             }
         }
