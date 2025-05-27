@@ -31,7 +31,7 @@ pipeline {
                         if [ ! -d ".git" ]; then
                             git clone ${REPO_URL} .;
                         else
-                            git pull origin main;
+                            git pull origin master;
                         fi &&
                         docker-compose up --build -d
                     '
