@@ -1,22 +1,8 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-            }
-        }
-
         stage('Deploy') {
             steps {
-                // Inject secrets here
                 withCredentials([
                     string(credentialsId: 'remote-user', variable: 'REMOTE_USER'),
                     string(credentialsId: 'remote-host', variable: 'REMOTE_HOST'),
