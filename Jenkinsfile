@@ -14,9 +14,9 @@ pipeline {
                     string(credentialsId: 'REMOTE_DIR', variable: 'REMOTE_DIR')
                 ]) {
                     bat '''
-                    ""C:\Users\Miguel.Lachman\AppData\Local\Programs\Git\bin\bash.exe"" -c "
-                    chmod 600 $SSH_KEY &&
-                    ssh -i $SSH_KEY -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST '
+                    "C:\\Users\\Miguel.Lachman\\AppData\\Local\\Programs\\Git\\bin\\bash.exe" -c '
+                    chmod 600 "$SSH_KEY"
+                    ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST" "
                         mkdir -p $REMOTE_DIR &&
                         cd $REMOTE_DIR &&
                         if [ ! -d .git ]; then
@@ -25,9 +25,10 @@ pipeline {
                             git pull origin master;
                         fi &&
                         docker-compose up --build -d
-                    '
                     "
+                    '
                     '''
+
                 }
             }
         }
