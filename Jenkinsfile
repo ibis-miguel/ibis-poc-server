@@ -5,10 +5,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'remote-user', variable: 'REMOTE_USER'),
-                    string(credentialsId: 'remote-host', variable: 'REMOTE_HOST'),
-                    string(credentialsId: 'remote-dir', variable: 'REMOTE_DIR'),
-                    string(credentialsId: 'repo-url', variable: 'REPO_URL')
+                    REMOTE_USER = credentials('REMOTE_USER'),
+                    REMOTE_HOST = credentials('REMOTE_HOST'),
+                    REMOTE_DIR = credentials('REMOTE_DIR'),
+                    REPO_URL = credentials('REPO_URL')
                 ]) {
                     sshagent(['your-ssh-credentials-id']) {
                         sh """
