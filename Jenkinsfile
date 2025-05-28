@@ -10,7 +10,7 @@ pipeline {
                     string(credentialsId: 'REMOTE_DIR', variable: 'REMOTE_DIR'),
                     string(credentialsId: 'REPO_URL', variable: 'REPO_URL')
                 ]) {
-                    sshagent(['your-ssh-credentials-id']) {
+                    sshagent(['my-ssh-key-id']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} '
                             mkdir -p ${REMOTE_DIR} &&
